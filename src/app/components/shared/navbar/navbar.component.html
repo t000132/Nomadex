@@ -4,20 +4,33 @@
       <span class="logo">🌍</span>
       <span class="brand-name">Nomadex</span>
     </a>
-    
+
     <ul class="navbar-menu">
       <li>
         <a routerLink="/explorer" routerLinkActive="active">Explorer</a>
       </li>
-      <li>
-        <a routerLink="/voyages" routerLinkActive="active">Mes Voyages</a>
-      </li>
-      <li>
-        <a routerLink="/ajouter-voyage" routerLinkActive="active" class="btn-primary">+ Ajouter</a>
-      </li>
-      <li>
-        <a routerLink="/login" routerLinkActive="active" class="btn-secondary">Connexion</a>
-      </li>
+
+      @if (isUserConnected) {
+        <li>
+          <a routerLink="/voyages" routerLinkActive="active">Mes Voyages</a>
+        </li>
+        <li>
+          <a routerLink="/ajouter-voyage" routerLinkActive="active" class="btn-primary">+ Ajouter</a>
+        </li>
+      } @else {
+        <li>
+          <a routerLink="/login" routerLinkActive="active" class="btn-secondary">Connexion</a>
+        </li>
+        <li>
+          <a routerLink="/register" routerLinkActive="active" class="btn-primary">Inscription</a>
+        </li>
+      }
+
+      @if (isUserConnected) {
+        <li class="user-info">
+          <span class="username">👤 {{ getUsername }}</span>
+        </li>
+      }
     </ul>
   </div>
 </nav>

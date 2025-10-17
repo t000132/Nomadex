@@ -80,6 +80,7 @@
   font-weight: 600;
   transition: all 0.3s ease;
   display: inline-block;
+  border: none;
   
   &.btn-primary {
     background-color: #27ae60;
@@ -98,6 +99,21 @@
     &:hover {
       background-color: #2980b9;
       transform: scale(1.05);
+    }
+  }
+
+  &.btn-logout {
+    background-color: #e74c3c; 
+    color: white;
+
+    &:hover {
+      background-color: #c0392b;
+      transform: scale(1.05);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: none;
     }
   }
 }
