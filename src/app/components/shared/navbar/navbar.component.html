@@ -1,1 +1,23 @@
-<p>navbar fonctionne!</p>
+<nav class="navbar">
+  <div class="navbar-container">
+    <a routerLink="/" class="navbar-brand">
+      <span class="logo">🌍</span>
+      <span class="brand-name">Nomadex</span>
+    </a>
+    
+    <ul class="navbar-menu">
+      <li>
+        <a routerLink="/explorer" routerLinkActive="active">Explorer</a>
+      </li>
+      <li>
+        <a routerLink="/voyages" routerLinkActive="active">Mes Voyages</a>
+      </li>
+      <li>
+        <a routerLink="/ajouter-voyage" routerLinkActive="active" class="btn-primary">+ Ajouter</a>
+      </li>
+      <li>
+        <a routerLink="/login" routerLinkActive="active" class="btn-secondary">Connexion</a>
+      </li>
+    </ul>
+  </div>
+</nav>
