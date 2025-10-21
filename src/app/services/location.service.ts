@@ -7,6 +7,7 @@ export interface LocationOption {
   country: string;
   latitude: number;
   longitude: number;
+  displayName?: string;
 }
 
 interface NominatimAddress {
@@ -20,6 +21,13 @@ interface NominatimAddress {
 }
 
 interface NominatimResult {
+  lat: string;
+  lon: string;
+  display_name: string;
+  address?: NominatimAddress;
+}
+
+interface NominatimReverseResult {
   lat: string;
   lon: string;
   display_name: string;
@@ -71,6 +79,28 @@ export class LocationService {
       );
   }
 
+  reverseGeocode(latitude: number, longitude: number): Observable<LocationOption | null> {
+    const params = new HttpParams()
+      .set('lat', latitude)
+      .set('lon', longitude)
+      .set('format', 'json')
+      .set('addressdetails', '1')
+      .set('email', 'contact@nomadex.app');
+
+    return this.http
+      .get<NominatimReverseResult>('https://nominatim.openstreetmap.org/reverse', {
+        params,
+        headers: { 'Accept-Language': 'fr' }
+      })
+      .pipe(
+        map((result) => (result ? this.toLocationOption(result) : null)),
+        catchError((error) => {
+          console.error('Reverse geocode failed', error);
+          return of(null);
+        })
+      );
+  }
+
   private toLocationOption(result: NominatimResult): LocationOption | null {
     const latitude = Number.parseFloat(result.lat);
     const longitude = Number.parseFloat(result.lon);
@@ -97,7 +127,8 @@ export class LocationService {
       city,
       country,
       latitude,
-      longitude
+      longitude,
+      displayName: result.display_name
     };
   }
 
