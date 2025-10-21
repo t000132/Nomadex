@@ -1,1 +1,59 @@
-<p>voyage-card fonctionne!</p>
+<article class="voyage-card">
+  <div class="voyage-card__media">
+    <ng-container *ngIf="coverImage; else placeholder">
+      <img
+        [src]="coverImage"
+        [alt]="voyage.titre"
+        loading="lazy"
+      />
+    </ng-container>
+    <ng-template #placeholder>
+      <div class="voyage-card__placeholder">
+        <span>{{ voyage.destination.charAt(0) || '?' }}</span>
+      </div>
+    </ng-template>
+    <span class="voyage-card__badge" [class.voyage-card__badge--public]="voyage.isPublic">
+      {{ voyage.isPublic ? 'Public' : 'Privé' }}
+    </span>
+  </div>
+
+  <div class="voyage-card__body">
+    <header class="voyage-card__header">
+      <h3 class="voyage-card__title">{{ voyage.titre }}</h3>
+      <p class="voyage-card__location">
+        {{ voyage.destination }}
+        <span class="voyage-card__country">({{ voyage.pays }})</span>
+      </p>
+      <p class="voyage-card__dates">
+        {{ voyage.dateDebut | date: 'd MMM y' }} → {{ voyage.dateFin | date: 'd MMM y' }}
+      </p>
+    </header>
+
+    <p class="voyage-card__description">
+      {{ voyage.description }}
+    </p>
+
+    <footer class="voyage-card__footer">
+      <button type="button" class="voyage-card__btn" (click)="onViewDetail()" [disabled]="disableActions">
+        Voir
+      </button>
+      <button
+        type="button"
+        class="voyage-card__btn voyage-card__btn--ghost"
+        (click)="onEdit()"
+        [disabled]="disableActions"
+      >
+        Modifier
+      </button>
+      <button
+        type="button"
+        class="voyage-card__btn voyage-card__btn--danger"
+        (click)="onRemove()"
+        [disabled]="disableActions"
+      >
+        <span *ngIf="isDeleting; else deleteLabel">Suppression…</span>
+        <ng-template #deleteLabel>Supprimer</ng-template>
+      </button>
+    </footer>
+  </div>
+</article>

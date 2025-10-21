@@ -1,0 +1,35 @@
+<section class="voyage-create">
+  <header class="voyage-create__header">
+    <h1>Créer un nouveau voyage</h1>
+    <p>Remplissez les informations ci-dessous pour partager votre prochaine aventure avec la communauté.</p>
+  </header>
+
+  <app-voyage-form
+    [initialValue]="null"
+    [submitting]="isSubmitting"
+    (submitForm)="handleSubmit($event)"
+    (cancel)="handleCancel()"
+  ></app-voyage-form>
+
+  <div class="voyage-create__error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="voyage-create__modal" *ngIf="showSuccessModal">
+    <div class="voyage-create__modal-backdrop"></div>
+    <article class="voyage-create__modal-content" role="alertdialog" aria-modal="true">
+      <h2>Voyage ajouté avec succès 🎉</h2>
+      <p>
+        Votre voyage
+        <strong>{{ lastCreatedVoyage?.titre }}</strong>
+        est maintenant visible dans Mes voyages.
+      </p>
+      <div class="voyage-create__modal-actions">
+        <button type="button" class="voyage-create__btn" (click)="goToVoyages()">Voir mes voyages</button>
+        <button type="button" class="voyage-create__btn voyage-create__btn--ghost" (click)="createAnother()">
+          Ajouter un autre voyage
+        </button>
+      </div>
+    </article>
+  </div>
+</section>

@@ -8,6 +8,10 @@ export interface Voyage {
   dateFin: string;
   description: string;
   imageUrl?: string;
+  imageData?: string;
+  galleries?: string[];
+  latitude?: number;
+  longitude?: number;
   isPublic: boolean;
   createdAt?: string;
 }
