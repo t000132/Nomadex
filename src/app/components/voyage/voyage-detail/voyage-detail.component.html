@@ -1,1 +1,80 @@
-<p>voyage-detail fonctionne!</p>
+<section class="voyage-detail" *ngIf="voyage">
+  <div class="voyage-detail__backdrop" (click)="onClose()"></div>
+
+  <article class="voyage-detail__panel" role="dialog" aria-modal="true">
+    <header class="voyage-detail__header">
+      <div>
+        <span
+          class="voyage-detail__visibility"
+          [class.voyage-detail__visibility--public]="voyage.isPublic"
+        >
+          {{ voyage.isPublic ? 'Public' : 'Privé' }}
+        </span>
+        <h2 class="voyage-detail__title">{{ voyage.titre }}</h2>
+        <p class="voyage-detail__location">
+          {{ voyage.destination }} <span>· {{ voyage.pays }}</span>
+        </p>
+        <p class="voyage-detail__dates">
+          {{ voyage.dateDebut | date: 'EEE d MMM y' }} → {{ voyage.dateFin | date: 'EEE d MMM y' }}
+        </p>
+      </div>
+
+      <button type="button" class="voyage-detail__close" (click)="onClose()" aria-label="Fermer">
+        ×
+      </button>
+    </header>
+
+    <div class="voyage-detail__hero" *ngIf="coverImage; else noImage"
+      [style.background-image]="'url(' + coverImage + ')'">
+    </div>
+    <ng-template #noImage>
+      <div class="voyage-detail__hero voyage-detail__hero--placeholder">
+        <span>{{ voyage.destination.charAt(0) || '?' }}</span>
+      </div>
+    </ng-template>
+
+    <section class="voyage-detail__section">
+      <h3>Résumé</h3>
+      <p>{{ voyage.description }}</p>
+    </section>
+
+    <section class="voyage-detail__gallery" *ngIf="voyage.galleries?.length">
+      <h3>Galerie</h3>
+      <div class="voyage-detail__gallery-content">
+        <div class="voyage-detail__thumbnails">
+          <figure
+            *ngFor="let image of voyage.galleries; let idx = index"
+            [class.voyage-detail__thumbnail--cover]="idx === 0"
+          >
+            <img [src]="image" [alt]="'Photo ' + (idx + 1)" loading="lazy" />
+            <figcaption *ngIf="idx === 0">Photo de couverture</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="voyage-detail__section voyage-detail__facts">
+      <div>
+        <h4>Départ</h4>
+        <p>{{ voyage.dateDebut | date: 'EEEE d MMMM y' }}</p>
+      </div>
+      <div>
+        <h4>Retour</h4>
+        <p>{{ voyage.dateFin | date: 'EEEE d MMMM y' }}</p>
+      </div>
+      <div>
+        <h4>Créé le</h4>
+        <p>{{ voyage.createdAt ? (voyage.createdAt | date: 'd MMM y à HH:mm') : '—' }}</p>
+      </div>
+    </section>
+
+    <footer class="voyage-detail__footer">
+      <button type="button" class="voyage-detail__btn voyage-detail__btn--primary" (click)="onEdit()">
+        Modifier
+      </button>
+      <button type="button" class="voyage-detail__btn" (click)="onClose()">
+        Fermer
+      </button>
+    </footer>
+  </article>
+</section>
