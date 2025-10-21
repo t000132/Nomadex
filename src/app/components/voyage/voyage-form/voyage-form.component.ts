@@ -1,18 +1,19 @@
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
   HostListener,
   Input,
   OnChanges,
+  OnDestroy,
   Output,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { debounceTime, distinctUntilChanged, startWith, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, startWith, switchMap, take } from 'rxjs';
 import { of } from 'rxjs';
 import { Voyage } from '../../../models/voyage.model';
 import { LocationOption, LocationService } from '../../../services/location.service';
@@ -24,24 +25,26 @@ import { LocationOption, LocationService } from '../../../services/location.serv
   templateUrl: './voyage-form.component.html',
   styleUrl: './voyage-form.component.scss'
 })
-export class VoyageFormComponent implements OnChanges {
+export class VoyageFormComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() initialValue: Voyage | null = null;
   @Input() submitting = false;
   @Output() cancel = new EventEmitter<void>();
   @Output() submitForm = new EventEmitter<Voyage>();
 
   @ViewChild('fileInput') fileInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('mapContainer') mapContainer?: ElementRef<HTMLDivElement>;
 
   readonly voyageForm: FormGroup;
   locationResults$ = of<LocationOption[]>([]);
   locationIsFocused = false;
-  mapHint =
-    'Sélectionnez une localisation pour afficher un aperçu. Le marqueur se positionnera automatiquement.';
+  mapHint = 'Cliquez sur la carte ou utilisez la recherche pour choisir un lieu.';
+  private static leafletLoader: Promise<void> | null = null;
+  private map: any;
+  private marker: any;
 
   constructor(
     private readonly fb: FormBuilder,
-    private readonly locationService: LocationService,
-    private readonly sanitizer: DomSanitizer
+    private readonly locationService: LocationService
   ) {
     this.voyageForm = this.fb.group({
       titre: ['', [Validators.required, Validators.maxLength(80)]],
@@ -59,6 +62,18 @@ export class VoyageFormComponent implements OnChanges {
     });
 
     this.setupLocationSearch();
+  }
+
+  async ngAfterViewInit(): Promise<void> {
+    await this.initializeMap();
+  }
+
+  ngOnDestroy(): void {
+    if (this.map) {
+      this.map.off();
+      this.map.remove();
+      this.map = null;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -85,6 +100,7 @@ export class VoyageFormComponent implements OnChanges {
       );
 
       this.voyageForm.get('galleries')?.setValue(existingGallery);
+      this.updateMapFromForm();
     }
   }
 
@@ -153,6 +169,9 @@ export class VoyageFormComponent implements OnChanges {
       { emitEvent: false }
     );
     this.voyageForm.get('galleries')?.setValue([]);
+    this.locationIsFocused = false;
+    this.removeMapMarker();
+    this.map?.setView([20, 0], 2);
   }
 
   focusLocation(): void {
@@ -177,6 +196,7 @@ export class VoyageFormComponent implements OnChanges {
       { emitEvent: false }
     );
     this.locationIsFocused = false;
+    this.updateMapMarker(option.latitude, option.longitude);
   }
 
   clearLocation(): void {
@@ -188,6 +208,8 @@ export class VoyageFormComponent implements OnChanges {
       longitude: ''
     });
     this.locationIsFocused = true;
+    this.removeMapMarker();
+    this.map?.setView([20, 0], 2);
   }
 
   triggerFileDialog(event: MouseEvent): void {
@@ -196,6 +218,127 @@ export class VoyageFormComponent implements OnChanges {
       return;
     }
     this.fileInput?.nativeElement.click();
+  }
+
+  private async initializeMap(): Promise<void> {
+    if (this.map || !this.mapContainer) {
+      return;
+    }
+
+    await this.loadLeafletResources();
+    const L = (window as any).L;
+    if (!L) {
+      return;
+    }
+
+    this.map = L.map(this.mapContainer.nativeElement, {
+      zoomControl: false,
+      attributionControl: false
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(this.map);
+
+    L.control.zoom({ position: 'bottomright' }).addTo(this.map);
+
+    this.map.on('click', (event: any) => {
+      const { lat, lng } = event.latlng;
+      this.onMapClick(lat, lng);
+    });
+
+    this.map.setView([20, 0], 2);
+    setTimeout(() => this.map?.invalidateSize(), 150);
+    this.updateMapFromForm(false);
+  }
+
+  private async loadLeafletResources(): Promise<void> {
+    if ((window as any).L) {
+      return;
+    }
+
+    if (!VoyageFormComponent.leafletLoader) {
+      VoyageFormComponent.leafletLoader = new Promise<void>((resolve, reject) => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+        link.crossOrigin = '';
+        document.head.appendChild(link);
+
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+        script.crossOrigin = '';
+        script.onload = () => resolve();
+        script.onerror = (error) => reject(error);
+        document.body.appendChild(script);
+      });
+    }
+
+    return VoyageFormComponent.leafletLoader!;
+  }
+
+  private updateMapFromForm(pan = true): void {
+    if (!this.map) {
+      return;
+    }
+    const lat = Number(this.voyageForm.value.latitude);
+    const lon = Number(this.voyageForm.value.longitude);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+      this.removeMapMarker();
+      this.map.setView([20, 0], 2, { animate: true });
+      return;
+    }
+    this.updateMapMarker(lat, lon, pan);
+  }
+
+  private updateMapMarker(latitude: number, longitude: number, pan = true): void {
+    if (!this.map) {
+      return;
+    }
+    const L = (window as any).L;
+    if (!this.marker) {
+      this.marker = L.marker([latitude, longitude]).addTo(this.map);
+    } else {
+      this.marker.setLatLng([latitude, longitude]);
+    }
+    if (pan) {
+      this.map.setView([latitude, longitude], 9, { animate: true });
+    }
+  }
+
+  private removeMapMarker(): void {
+    if (this.map && this.marker) {
+      this.map.removeLayer(this.marker);
+      this.marker = null;
+    }
+  }
+
+  private onMapClick(latitude: number, longitude: number): void {
+    this.voyageForm.patchValue(
+      {
+        latitude,
+        longitude
+      },
+      { emitEvent: false }
+    );
+    this.updateMapMarker(latitude, longitude);
+
+    this.locationService
+      .reverseGeocode(latitude, longitude)
+      .pipe(take(1))
+      .subscribe((option) => {
+        if (option) {
+          this.voyageForm.patchValue(
+            {
+              destination: option.city,
+              pays: option.country,
+              locationSearch: option.displayName ?? `${option.city}, ${option.country}`
+            },
+            { emitEvent: false }
+          );
+        }
+      });
   }
 
   onDropFile(event: DragEvent): void {
@@ -233,16 +376,6 @@ export class VoyageFormComponent implements OnChanges {
 
   get hasCoordinates(): boolean {
     return Boolean(this.voyageForm.value.latitude && this.voyageForm.value.longitude);
-  }
-
-  get mapUrl(): SafeResourceUrl | null {
-    if (!this.hasCoordinates) {
-      return null;
-    }
-    const latitude = Number(this.voyageForm.value.latitude);
-    const longitude = Number(this.voyageForm.value.longitude);
-    const url = `https://maps.google.com/maps?q=${latitude},${longitude}&hl=fr&z=6&output=embed`;
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   private setupLocationSearch(): void {

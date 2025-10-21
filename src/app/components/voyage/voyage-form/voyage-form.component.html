@@ -95,21 +95,14 @@
             {{ voyageForm.value.latitude | number: '1.2-4' }}, {{ voyageForm.value.longitude | number: '1.2-4' }}
           </span>
         </div>
-        <div class="voyage-form__map-preview" [class.voyage-form__map-preview--empty]="!mapUrl">
-          <ng-container *ngIf="mapUrl; else mapHintTpl">
-            <iframe
-              [src]="mapUrl"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-              allowfullscreen
-            ></iframe>
-            <p class="voyage-form__map-caption">
-              {{ voyageForm.value.destination }}, {{ voyageForm.value.pays }}
-            </p>
-          </ng-container>
-          <ng-template #mapHintTpl>
+        <div class="voyage-form__map-wrapper" [class.voyage-form__map-wrapper--empty]="!hasCoordinates">
+          <div #mapContainer class="voyage-form__map-canvas"></div>
+          <div class="voyage-form__map-overlay" *ngIf="!hasCoordinates">
             <p>{{ mapHint }}</p>
-          </ng-template>
+          </div>
+          <div class="voyage-form__map-caption" *ngIf="hasCoordinates">
+            {{ voyageForm.value.destination }}, {{ voyageForm.value.pays }}
+          </div>
         </div>
       </div>
     </div>
