@@ -1,1 +1,23 @@
-<p>journal-entry fonctionne!</p>
+<div class="journal-entry">
+  <div class="entry-header">
+    <div class="entry-meta">
+      <h3 class="entry-title">{{ entry.titre }}</h3>
+      <div class="entry-details">
+        <span class="entry-date">📅 {{ entry.date | dateFormat:'long' }}</span>
+        <span class="entry-location" *ngIf="entry.lieu">📍 {{ entry.lieu }}</span>
+      </div>
+    </div>
+    <div class="entry-badges">
+      <span class="badge badge-humeur" *ngIf="entry.humeur">{{ entry.humeur }}</span>
+      <span class="badge badge-meteo" *ngIf="entry.meteo">{{ entry.meteo }}</span>
+    </div>
+  </div>
+
+  <div class="entry-image" *ngIf="showImage && entry.imageUrl">
+    <img [src]="entry.imageUrl || getDefaultImage()" [alt]="entry.titre">
+  </div>
+
+  <div class="entry-content">
+    <p>{{ entry.contenu }}</p>
+  </div>
+</div>

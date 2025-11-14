@@ -1,0 +1,101 @@
+.journal-entry {
+  background-color: var(--white);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(53, 167, 255, 0.2);
+  }
+
+  .entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .entry-meta {
+      flex: 1;
+
+      .entry-title {
+        color: var(--text-dark);
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .entry-details {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+
+        span {
+          color: var(--secondary-green);
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .entry-badges {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+
+      .badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+
+        &.badge-humeur {
+          background-color: rgba(129, 166, 132, 0.2);
+          color: var(--secondary-green);
+        }
+
+        &.badge-meteo {
+          background-color: rgba(53, 167, 255, 0.2);
+          color: var(--primary-color);
+        }
+      }
+    }
+  }
+
+  .entry-image {
+    width: 100%;
+    height: 250px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .entry-content {
+    color: #555;
+    line-height: 1.8;
+    font-size: 1rem;
+
+    p {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .entry-header {
+      flex-direction: column;
+
+      .entry-badges {
+        width: 100%;
+      }
+    }
+  }
+}

@@ -1,1 +1,98 @@
-<p>journal-form fonctionne!</p>
+<div class="journal-form-container">
+  <h2>Nouvelle Entrée de Journal</h2>
+
+  <form [formGroup]="journalForm" (ngSubmit)="onSubmit()" class="journal-form">
+    <div class="form-group">
+      <label for="titre">Titre *</label>
+      <input 
+        type="text" 
+        id="titre" 
+        formControlName="titre"
+        [class.error]="titre?.invalid && titre?.touched"
+        placeholder="Une journée inoubliable...">
+      <div class="error-message" *ngIf="titre?.invalid && titre?.touched">
+        <span *ngIf="titre?.errors?.['required']">Le titre est requis</span>
+        <span *ngIf="titre?.errors?.['minlength']">Le titre doit contenir au moins 3 caractères</span>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="date">Date *</label>
+        <input 
+          type="date" 
+          id="date" 
+          formControlName="date"
+          [class.error]="date?.invalid && date?.touched">
+        <div class="error-message" *ngIf="date?.invalid && date?.touched">
+          <span *ngIf="date?.errors?.['required']">La date est requise</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="lieu">Lieu *</label>
+        <input 
+          type="text" 
+          id="lieu" 
+          formControlName="lieu"
+          [class.error]="lieu?.invalid && lieu?.touched"
+          placeholder="Paris, France">
+        <div class="error-message" *ngIf="lieu?.invalid && lieu?.touched">
+          <span *ngIf="lieu?.errors?.['required']">Le lieu est requis</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="humeur">Humeur</label>
+        <select id="humeur" formControlName="humeur">
+          <option value="">Sélectionnez...</option>
+          <option *ngFor="let humeur of humeurOptions" [value]="humeur">{{ humeur }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="meteo">Météo</label>
+        <select id="meteo" formControlName="meteo">
+          <option value="">Sélectionnez...</option>
+          <option *ngFor="let meteo of meteoOptions" [value]="meteo">{{ meteo }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="contenu">Contenu *</label>
+      <textarea 
+        id="contenu" 
+        formControlName="contenu"
+        [class.error]="contenu?.invalid && contenu?.touched"
+        rows="6"
+        placeholder="Racontez votre journée..."></textarea>
+      <div class="error-message" *ngIf="contenu?.invalid && contenu?.touched">
+        <span *ngIf="contenu?.errors?.['required']">Le contenu est requis</span>
+        <span *ngIf="contenu?.errors?.['minlength']">Le contenu doit contenir au moins 20 caractères</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="imageUrl">URL de l'image (optionnel)</label>
+      <input 
+        type="url" 
+        id="imageUrl" 
+        formControlName="imageUrl"
+        placeholder="https://example.com/photo.jpg">
+    </div>
+
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">Annuler</button>
+      <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Enregistrement...' : 'Enregistrer' }}
+      </button>
+    </div>
+  </form>
+</div>

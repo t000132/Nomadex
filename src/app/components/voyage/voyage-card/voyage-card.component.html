@@ -1,1 +1,30 @@
-<p>voyage-card fonctionne!</p>
+<div class="voyage-card" appCardHover (click)="onCardClick()">
+  <div class="voyage-image">
+    <img [src]="voyage.imageUrl || getDefaultImage()" [alt]="voyage.titre">
+    <span class="badge" *ngIf="voyage.isPublic">Public</span>
+  </div>
+  
+  <div class="voyage-content">
+    <h3 class="voyage-title">{{ voyage.titre }}</h3>
+    <p class="voyage-destination">
+      <i class="icon-location"></i>
+      {{ voyage.destination }}, {{ voyage.pays }}
+    </p>
+    
+    <p class="voyage-dates">
+      <i class="icon-calendar"></i>
+      {{ voyage.dateDebut | dateFormat:'short' }} - {{ voyage.dateFin | dateFormat:'short' }}
+    </p>
+    
+    <p class="voyage-description">{{ voyage.description }}</p>
+    
+    <div class="voyage-actions" *ngIf="showActions">
+      <button class="btn-edit" (click)="onEdit($event)" title="Modifier">
+        ✏️ Éditer
+      </button>
+      <button class="btn-delete" (click)="onDelete($event)" title="Supprimer">
+        🗑️ Supprimer
+      </button>
+    </div>
+  </div>
+</div>

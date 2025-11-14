@@ -1,1 +1,33 @@
-<p>voyage-list fonctionne!</p>
+<div class="voyage-list-container">
+  <div class="container">
+    <div class="header">
+      <h1>Mes Voyages</h1>
+      <a routerLink="/ajouter-voyage" class="btn btn-primary">+ Nouveau Voyage</a>
+    </div>
+
+    <div class="loading" *ngIf="isLoading">
+      <p>Chargement des voyages...</p>
+    </div>
+
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <div class="voyages-grid" *ngIf="!isLoading && voyages.length > 0">
+      <app-voyage-card 
+        *ngFor="let voyage of voyages"
+        [voyage]="voyage"
+        [showActions]="true"
+        (voyageClick)="onVoyageClick($event)"
+        (deleteVoyage)="onDeleteVoyage($event)"
+        (editVoyage)="onEditVoyage($event)">
+      </app-voyage-card>
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading && voyages.length === 0">
+      <h2>🌍 Aucun voyage pour le moment</h2>
+      <p>Commencez à documenter vos aventures en créant votre premier voyage !</p>
+      <a routerLink="/ajouter-voyage" class="btn btn-primary">Créer mon premier voyage</a>
+    </div>
+  </div>
+</div>

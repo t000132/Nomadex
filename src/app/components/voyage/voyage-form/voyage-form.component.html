@@ -1,1 +1,121 @@
-<p>voyage-form fonctionne!</p>
+<div class="voyage-form-container">
+  <div class="container">
+    <h1 class="text-center">Créer un Nouveau Voyage</h1>
+
+    <form [formGroup]="voyageForm" (ngSubmit)="onSubmit()" class="voyage-form">
+      <div class="form-group">
+        <label for="titre">Titre du voyage *</label>
+        <input 
+          type="text" 
+          id="titre" 
+          formControlName="titre"
+          [class.error]="titre?.invalid && titre?.touched"
+          placeholder="Mon voyage à Paris">
+        <div class="error-message" *ngIf="titre?.invalid && titre?.touched">
+          <span *ngIf="titre?.errors?.['required']">Le titre est requis</span>
+          <span *ngIf="titre?.errors?.['minlength']">Le titre doit contenir au moins 3 caractères</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="destination">Destination *</label>
+          <input 
+            type="text" 
+            id="destination" 
+            formControlName="destination"
+            [class.error]="destination?.invalid && destination?.touched"
+            placeholder="Paris">
+          <div class="error-message" *ngIf="destination?.invalid && destination?.touched">
+            <span *ngIf="destination?.errors?.['required']">La destination est requise</span>
+            <span *ngIf="destination?.errors?.['minlength']">La destination doit contenir au moins 2 caractères</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="pays">Pays *</label>
+          <input 
+            type="text" 
+            id="pays" 
+            formControlName="pays"
+            [class.error]="pays?.invalid && pays?.touched"
+            placeholder="France">
+          <div class="error-message" *ngIf="pays?.invalid && pays?.touched">
+            <span *ngIf="pays?.errors?.['required']">Le pays est requis</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="dateDebut">Date de début *</label>
+          <input 
+            type="date" 
+            id="dateDebut" 
+            formControlName="dateDebut"
+            [class.error]="dateDebut?.invalid && dateDebut?.touched">
+          <div class="error-message" *ngIf="dateDebut?.invalid && dateDebut?.touched">
+            <span *ngIf="dateDebut?.errors?.['required']">La date de début est requise</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="dateFin">Date de fin *</label>
+          <input 
+            type="date" 
+            id="dateFin" 
+            formControlName="dateFin"
+            [class.error]="dateFin?.invalid && dateFin?.touched">
+          <div class="error-message" *ngIf="dateFin?.invalid && dateFin?.touched">
+            <span *ngIf="dateFin?.errors?.['required']">La date de fin est requise</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="voyageForm.errors?.['dateRange'] && (dateDebut?.touched || dateFin?.touched)">
+        {{ voyageForm.errors?.['dateRange'].message }}
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description *</label>
+        <textarea 
+          id="description" 
+          formControlName="description"
+          [class.error]="description?.invalid && description?.touched"
+          rows="5"
+          placeholder="Décrivez votre voyage..."></textarea>
+        <div class="error-message" *ngIf="description?.invalid && description?.touched">
+          <span *ngIf="description?.errors?.['required']">La description est requise</span>
+          <span *ngIf="description?.errors?.['minlength']">La description doit contenir au moins 10 caractères</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="imageUrl">URL de l'image (optionnel)</label>
+        <input 
+          type="url" 
+          id="imageUrl" 
+          formControlName="imageUrl"
+          placeholder="https://example.com/image.jpg">
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label>
+          <input type="checkbox" formControlName="isPublic">
+          <span>Rendre ce voyage public</span>
+        </label>
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" routerLink="/voyages">Annuler</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Création en cours...' : 'Créer le voyage' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
