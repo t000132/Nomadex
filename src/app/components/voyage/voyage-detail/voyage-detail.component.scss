@@ -222,27 +222,39 @@
 }
 
 .voyage-detail__btn {
-  border: none;
-  border-radius: 12px;
-  padding: 0.65rem 1.25rem;
+  padding: 0.75rem 2rem;
+  border: 2px solid #000;
+  border-radius: 6px;
+  font-size: 1rem;
   font-weight: 600;
-  font-size: 0.95rem;
   cursor: pointer;
-  color: #34495e;
-  background: rgba(52, 73, 94, 0.1);
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
+  background-color: #fff;
+  color: #000;
 
   &:hover {
-    background: rgba(52, 73, 94, 0.2);
-    transform: translateY(-1px);
+    background-color: #f5f5f5;
   }
 
   &--primary {
-    background: #0984e3;
-    color: #ffffff;
+    background-color: #000;
+    color: #fff;
 
     &:hover {
-      background: #076bcc;
+      background-color: #333;
+      transform: translateY(-1px);
+    }
+  }
+
+  &--danger {
+    background-color: #fff;
+    color: #e74c3c;
+    border-color: #e74c3c;
+
+    &:hover {
+      background-color: #e74c3c;
+      color: #fff;
+      transform: translateY(-1px);
     }
   }
 }

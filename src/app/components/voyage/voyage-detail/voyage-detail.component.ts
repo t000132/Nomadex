@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Voyage } from '../../../models/voyage.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-voyage-detail',
@@ -13,6 +14,14 @@ export class VoyageDetailComponent {
   @Input() voyage: Voyage | null = null;
   @Output() close = new EventEmitter<void>();
   @Output() edit = new EventEmitter<Voyage>();
+  @Output() remove = new EventEmitter<Voyage>();
+
+  private authService = inject(AuthService);
+
+  get canEdit(): boolean {
+    if (!this.voyage || !this.authService.user) return false;
+    return this.voyage.userId === this.authService.user.id;
+  }
 
   onClose(): void {
     this.close.emit();
@@ -21,6 +30,12 @@ export class VoyageDetailComponent {
   onEdit(): void {
     if (this.voyage) {
       this.edit.emit(this.voyage);
+    }
+  }
+
+  onRemove(): void {
+    if (this.voyage) {
+      this.remove.emit(this.voyage);
     }
   }
 

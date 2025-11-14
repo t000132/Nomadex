@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
         this.authService.user = users[0];
         if (!this.authService.user) return;
         this.authService.saveUser();
-        this.router.navigate(['/']);
+        this.router.navigate(['/dashboard']);
       },
       error: (error) => {
         alert('Erreur dans la requête');

@@ -1,57 +1,51 @@
 <div class="explorer-container">
-  <div class="hero">
-    @if (isUserConnected) {
-      <h1>Bienvenue, {{ getUsername }} 🌍</h1>
-      <p class="tagline">Prêt à partager de nouvelles aventures ?</p>
-    } @else {
-      <h1>Bienvenue sur Nomadex</h1>
-      <p class="tagline">Partagez vos aventures, découvrez de nouveaux horizons</p>
-    }
-  </div>
-
-  <div class="features">
-    <div class="feature-card">
-      <span class="icon">✈️</span>
-      <h3>Créez vos voyages</h3>
-      <p>Documentez chaque aventure avec photos, dates et souvenirs</p>
-    </div>
-    
-    <div class="feature-card">
-      <span class="icon">📖</span>
-      <h3>Journal de bord</h3>
-      <p>Notez vos expériences quotidiennes et partagez vos émotions</p>
-    </div>
-    
-    <div class="feature-card">
-      <span class="icon">🗺️</span>
-      <h3>Explorez le monde</h3>
-      <p>Découvrez les voyages des autres et inspirez-vous</p>
-    </div>
-  </div>
-
-  @if (isUserConnected) {
-    <div class="cta-section">
-      <h2>Heureux de vous revoir, {{ getUsername }} !</h2>
-      <div class="cta-buttons">
-        <a routerLink="/voyages" class="btn btn-primary">Mes voyages</a>
-        <button class="btn btn-logout" (click)="logout()">Se déconnecter</button>
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Explorez le monde avec Nomadex</h1>
+      <p class="hero-subtitle">Créez, partagez et revivez vos plus beaux voyages</p>
+      <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&h=600&fit=crop" alt="Voyage inspirant" loading="lazy" />
       </div>
     </div>
+  </section>
 
-    <div class="info-box">
-      <p><strong>Astuce :</strong> Continuez à explorer ou partagez vos nouvelles destinations !</p>
-    </div>
-  } @else {
-    <div class="cta-section">
-      <h2>Prêt à commencer votre aventure ?</h2>
-      <div class="cta-buttons">
-        <a routerLink="/register" class="btn btn-primary">S'inscrire</a>
-        <a routerLink="/login" class="btn btn-secondary">Se connecter</a>
+  <!-- Feature Section 1 -->
+  <section class="feature-section">
+    <div class="feature-container">
+      <div class="feature-text">
+        <h2>Organisez vos voyages</h2>
+        <p>Planifiez et documentez chaque destination avec précision. Ajoutez des cartes interactives, des photos mémorables et gardez trace de toutes vos dates importantes. Transformez chaque voyage en une histoire bien structurée.</p>
+      </div>
+      <div class="feature-image">
+        <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=600&fit=crop" alt="Organisation de voyages" loading="lazy" />
       </div>
     </div>
+  </section>
 
-    <div class="info-box">
-      <p><strong>Note :</strong> Commencez par vous inscrire pour créer vos premiers voyages !</p>
+  <!-- Feature Section 2 (Reversed) -->
+  <section class="feature-section reverse">
+    <div class="feature-container">
+      <div class="feature-text">
+        <h2>Tenez votre journal de bord</h2>
+        <p>Capturez vos émotions du moment, notez la météo et immortalisez chaque instant inoubliable. Votre journal devient le compagnon idéal pour revivre vos aventures jour après jour.</p>
+      </div>
+      <div class="feature-image">
+        <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&h=600&fit=crop" alt="Journal de voyage" loading="lazy" />
+      </div>
     </div>
-  }
+  </section>
+
+  <!-- Feature Section 3 -->
+  <section class="feature-section">
+    <div class="feature-container">
+      <div class="feature-text">
+        <h2>Découvrez de nouvelles destinations</h2>
+        <p>Inspirez-vous des aventures d'autres voyageurs passionnés. Explorez leurs récits, découvrez des destinations inédites et laissez-vous guider vers votre prochaine escapade.</p>
+      </div>
+      <div class="feature-image">
+        <img src="https://images.unsplash.com/photo-1524850011238-e3d235c7d4c9?w=800&h=600&fit=crop" alt="Découverte de destinations" loading="lazy" />
+      </div>
+    </div>
+  </section>
 </div>

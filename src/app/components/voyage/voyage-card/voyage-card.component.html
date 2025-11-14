@@ -1,4 +1,4 @@
-<article class="voyage-card">
+<article class="voyage-card" appCardHover (click)="onViewDetail()">
   <div class="voyage-card__media">
     <ng-container *ngIf="coverImage; else placeholder">
       <img
@@ -25,35 +25,12 @@
         <span class="voyage-card__country">({{ voyage.pays }})</span>
       </p>
       <p class="voyage-card__dates">
-        {{ voyage.dateDebut | date: 'd MMM y' }} → {{ voyage.dateFin | date: 'd MMM y' }}
+        {{ voyage.dateDebut | dateFormat:'short' }} → {{ voyage.dateFin | dateFormat:'short' }}
       </p>
     </header>
 
     <p class="voyage-card__description">
       {{ voyage.description }}
     </p>
-
-    <footer class="voyage-card__footer">
-      <button type="button" class="voyage-card__btn" (click)="onViewDetail()" [disabled]="disableActions">
-        Voir
-      </button>
-      <button
-        type="button"
-        class="voyage-card__btn voyage-card__btn--ghost"
-        (click)="onEdit()"
-        [disabled]="disableActions"
-      >
-        Modifier
-      </button>
-      <button
-        type="button"
-        class="voyage-card__btn voyage-card__btn--danger"
-        (click)="onRemove()"
-        [disabled]="disableActions"
-      >
-        <span *ngIf="isDeleting; else deleteLabel">Suppression…</span>
-        <ng-template #deleteLabel>Supprimer</ng-template>
-      </button>
-    </footer>
   </div>
 </article>

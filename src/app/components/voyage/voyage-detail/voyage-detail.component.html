@@ -69,7 +69,10 @@
     </section>
 
     <footer class="voyage-detail__footer">
-      <button type="button" class="voyage-detail__btn voyage-detail__btn--primary" (click)="onEdit()">
+      <button *ngIf="canEdit" type="button" class="voyage-detail__btn voyage-detail__btn--danger" (click)="onRemove()">
+        Supprimer
+      </button>
+      <button *ngIf="canEdit" type="button" class="voyage-detail__btn voyage-detail__btn--primary" (click)="onEdit()">
         Modifier
       </button>
       <button type="button" class="voyage-detail__btn" (click)="onClose()">

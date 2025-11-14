@@ -189,7 +189,7 @@ export class VoyageListComponent implements OnInit, OnDestroy {
     this.error = null;
 
     this.voyageService
-      .getVoyages()
+      .getPublicVoyages()
       .pipe(
         takeUntil(this.destroy$),
         finalize(() => {

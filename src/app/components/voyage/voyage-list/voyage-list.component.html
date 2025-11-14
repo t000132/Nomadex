@@ -1,20 +1,11 @@
 <section class="voyage-list container">
   <div class="voyage-list__intro">
     <div>
-      <h1 class="voyage-list__title">Mes voyages</h1>
+      <h1 class="voyage-list__title">Voyages</h1>
       <p class="voyage-list__subtitle">
-        Suivez vos prochaines aventures, inspirez la communauté et gardez une trace de chaque moment fort.
+        Découvrez les aventures partagées par la communauté et explorez de nouvelles destinations.
       </p>
     </div>
-    <button
-      type="button"
-      class="voyage-list__cta"
-      (click)="openCreateForm()"
-      [disabled]="isSaving || isLoading"
-    >
-      <span aria-hidden="true">+</span>
-      Nouveau voyage
-    </button>
   </div>
 
   <div class="voyage-list__controls">
@@ -32,33 +23,6 @@
         (input)="onSearch($any($event.target).value)"
         [disabled]="isLoading"
       />
-    </div>
-
-    <div class="voyage-list__filters">
-      <button
-        type="button"
-        (click)="setVisibilityFilter('all')"
-        [class.is-active]="visibilityFilter === 'all'"
-        [disabled]="isLoading"
-      >
-        Tous
-      </button>
-      <button
-        type="button"
-        (click)="setVisibilityFilter('public')"
-        [class.is-active]="visibilityFilter === 'public'"
-        [disabled]="isLoading"
-      >
-        Publics
-      </button>
-      <button
-        type="button"
-        (click)="setVisibilityFilter('private')"
-        [class.is-active]="visibilityFilter === 'private'"
-        [disabled]="isLoading"
-      >
-        Privés
-      </button>
     </div>
 
     <label class="voyage-list__sort">
@@ -92,11 +56,8 @@
     <app-voyage-card
       *ngFor="let voyage of filteredVoyages; trackBy: trackByVoyageId"
       [voyage]="voyage"
-      [disableActions]="isSaving || pendingDeleteId === voyage.id"
-      [isDeleting]="pendingDeleteId === voyage.id"
+      [disableActions]="true"
       (viewDetail)="viewVoyage($event)"
-      (edit)="editVoyage($event)"
-      (remove)="removeVoyage($event)"
     ></app-voyage-card>
   </div>
 

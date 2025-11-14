@@ -11,7 +11,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   addUser(user: { username: string; password: string; }) {
-    return this.http.post('http://localhost:3000/users', user).subscribe();
+    return this.http.post<User>('http://localhost:3000/users', user);
   }
 
   login(user: { username: string; password: string; }) {
@@ -44,7 +44,7 @@ export class AuthService {
     return false;
   }
 
-  private getSavedUserInfo() {
+  getSavedUserInfo() {
     return this.http.get<User[]>('http://localhost:3000/users?id=' + this.getSavedUser());
   }
 }

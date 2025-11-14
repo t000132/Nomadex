@@ -10,13 +10,15 @@ import {
   OnDestroy,
   Output,
   SimpleChanges,
-  ViewChild
+  ViewChild,
+  inject
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, startWith, switchMap, take } from 'rxjs';
 import { of } from 'rxjs';
 import { Voyage } from '../../../models/voyage.model';
 import { LocationOption, LocationService } from '../../../services/location.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-voyage-form',
@@ -44,7 +46,8 @@ export class VoyageFormComponent implements OnChanges, AfterViewInit, OnDestroy 
 
   constructor(
     private readonly fb: FormBuilder,
-    private readonly locationService: LocationService
+    private readonly locationService: LocationService,
+    private readonly authService: AuthService
   ) {
     this.voyageForm = this.fb.group({
       titre: ['', [Validators.required, Validators.maxLength(80)]],
@@ -121,7 +124,7 @@ export class VoyageFormComponent implements OnChanges, AfterViewInit, OnDestroy 
           createdAt: this.initialValue.createdAt
         }
       : {
-          userId: 1,
+          userId: this.authService.user?.id || 1,
           createdAt: new Date().toISOString()
         };
 

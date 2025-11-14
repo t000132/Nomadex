@@ -10,9 +10,20 @@ import { AuthService } from '../../../services/auth.service';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
+  showUserMenu = false;
+
   constructor(private authService: AuthService) { }
 
+  toggleUserMenu() {
+    this.showUserMenu = !this.showUserMenu;
+  }
+
+  closeUserMenu() {
+    this.showUserMenu = false;
+  }
+
   logout() {
+    this.closeUserMenu();
     this.authService.logout();
   }
 

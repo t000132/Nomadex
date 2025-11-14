@@ -1,17 +1,14 @@
 .voyage-card {
   display: flex;
   flex-direction: column;
-  background-color: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(44, 62, 80, 0.08);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s ease;
   min-height: 100%;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 24px 48px rgba(44, 62, 80, 0.12);
-  }
+  cursor: pointer;
 }
 
 .voyage-card__media {
@@ -24,6 +21,11 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.05);
   }
 }
 
@@ -33,8 +35,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #74b9ff, #a29bfe);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-green));
+  color: var(--white);
   font-size: 2.5rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -44,16 +46,17 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 600;
   background: rgba(231, 76, 60, 0.9);
-  color: #ffffff;
+  color: var(--white);
   letter-spacing: 0.03em;
+  backdrop-filter: blur(5px);
 
   &--public {
-    background: rgba(46, 204, 113, 0.9);
+    background: rgba(87, 136, 108, 0.9);
   }
 }
 
@@ -71,31 +74,32 @@
 }
 
 .voyage-card__title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #2c3e50;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-dark);
 }
 
 .voyage-card__location {
   font-weight: 500;
-  color: #34495e;
+  color: var(--primary-color);
+  font-size: 1rem;
 }
 
 .voyage-card__country {
-  font-size: 0.85rem;
-  color: #718093;
+  font-size: 0.875rem;
+  color: var(--secondary-green);
   margin-left: 0.25rem;
 }
 
 .voyage-card__dates {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: #718093;
 }
 
 .voyage-card__description {
   flex: 1;
-  color: #4a5b6b;
-  line-height: 1.5;
+  color: var(--text-dark);
+  line-height: 1.6;
   font-size: 0.95rem;
 }
 
@@ -108,49 +112,45 @@
 .voyage-card__btn {
   flex: 1 1 auto;
   border: none;
-  border-radius: 12px;
-  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-  background: #0984e3;
-  color: #ffffff;
+  transition: all 0.3s ease;
+  background: var(--primary-color);
+  color: var(--white);
 
   &:hover {
-    transform: translateY(-1px);
-    background: #076bcc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(53, 167, 255, 0.4);
   }
 
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.65;
+    opacity: 0.5;
     transform: none;
   }
 
   &--ghost {
-    background: rgba(9, 132, 227, 0.1);
-    color: #0984e3;
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
 
     &:hover {
-      background: rgba(9, 132, 227, 0.2);
-    }
-
-    &:disabled {
-      background: rgba(9, 132, 227, 0.08);
+      background: var(--primary-color);
+      color: var(--white);
     }
   }
 
   &--danger {
-    background: rgba(231, 76, 60, 0.12);
+    background: transparent;
+    border: 2px solid #e74c3c;
     color: #e74c3c;
 
     &:hover {
-      background: rgba(231, 76, 60, 0.2);
-    }
-
-    &:disabled {
-      background: rgba(231, 76, 60, 0.08);
+      background: #e74c3c;
+      color: var(--white);
     }
   }
 }
