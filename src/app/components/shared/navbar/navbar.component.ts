@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { AuthService } from '../../../services/auth.service';
 export class NavbarComponent {
   showUserMenu = false;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   toggleUserMenu() {
     this.showUserMenu = !this.showUserMenu;
@@ -33,5 +33,13 @@ export class NavbarComponent {
 
   get getUsername() {
     return this.authService.user?.username || '';
+  }
+
+  navigateToProfile() {
+    this.closeUserMenu();
+    const userId = this.authService.user?.id;
+    if (userId) {
+      this.router.navigate(['/profil', userId]);
+    }
   }
 }

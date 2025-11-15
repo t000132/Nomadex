@@ -30,6 +30,12 @@
           </button>
           @if (showUserMenu) {
             <div class="user-dropdown">
+              <li>
+                <button type="button" class="dropdown-item" (click)="navigateToProfile()">
+                  <span>👤</span>
+                  <span>Profil</span>
+                </button>
+              </li>
               <button type="button" class="dropdown-item" (click)="logout()">
                 <span>🚪</span>
                 <span>Déconnexion</span>
