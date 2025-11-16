@@ -1,1 +1,23 @@
-<p>journal-entry fonctionne!</p>
+<article class="journal-entry" appCardHover>
+  <header class="journal-entry__header">
+    <h3 class="journal-entry__title">{{ entry.titre }}</h3>
+    <div class="journal-entry__meta">
+      <span class="journal-entry__date">{{ entry.date | dateFormat:'long' }}</span>
+      <span class="journal-entry__separator">•</span>
+      <span class="journal-entry__location">{{ entry.lieu }}</span>
+    </div>
+  </header>
+
+  <div class="journal-entry__info">
+    <span class="journal-entry__badge">{{ entry.humeur }}</span>
+    <span class="journal-entry__badge">{{ entry.meteo }}</span>
+  </div>
+
+  <div class="journal-entry__content">
+    <p>{{ entry.contenu }}</p>
+  </div>
+
+  <div class="journal-entry__image" *ngIf="showImage && entry.imageUrl">
+    <img [src]="entry.imageUrl" [alt]="entry.titre" loading="lazy" />
+  </div>
+</article>

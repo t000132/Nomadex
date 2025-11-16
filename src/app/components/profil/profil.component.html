@@ -1,1 +1,75 @@
-<p>profil fonctionne!</p>
+<section class="profil">
+
+  <div class="cover-picture">
+    <img
+      [src]="authService.user?.coverPicture || defaultCover"
+      alt="Photo de couverture"
+    />
+  </div>
+
+  <header class="profil-header">
+
+    <div class="avatar-container">
+      <img
+        class="avatar"
+        [src]="authService.user?.avatar || defaultAvatar"
+        alt="Avatar utilisateur"
+      />
+    </div>
+
+    <h1>{{ authService.user?.username }}</h1>
+    <p>{{ authService.user?.additionalInfo || defaultInfo }}</p>
+
+    <button class="btn btn-primary" (click)="toggleEdit()">
+      {{ isEditing ? 'Annuler' : 'Modifier mon profil' }}
+    </button>
+
+  </header>
+
+  <form *ngIf="isEditing" [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="profil-form">
+
+    <div class="form-group">
+      <label>Nom d'utilisateur</label>
+      <input type="text" formControlName="username" />
+    </div>
+
+    <div class="form-group">
+      <label>Mot de passe</label>
+      <input type="password" formControlName="password" />
+    </div>
+
+    <div class="form-group">
+      <label>Avatar (URL)</label>
+      <input type="url" formControlName="avatar" />
+    </div>
+
+    <div class="form-group">
+      <label>Photo de couverture (URL)</label>
+      <input type="url" formControlName="coverPicture" />
+    </div>
+
+    <div class="form-group">
+      <label>Informations supplémentaires</label>
+      <textarea rows="4" formControlName="additionalInfo"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+  </form>
+
+  <section class="voyages-section">
+    <h2>Mes Voyages</h2>
+
+    <div class="voyages-grid" *ngIf="voyages.length > 0; else noVoyages">
+      <app-voyage-card
+        *ngFor="let voyage of voyages"
+        [voyage]="voyage"
+        (viewDetail)="router.navigate(['/voyage', voyage.id])"
+      ></app-voyage-card>
+    </div>
+
+    <ng-template #noVoyages>
+      <p>Aucun voyage créé pour le moment.</p>
+    </ng-template>
+  </section>
+
+</section>

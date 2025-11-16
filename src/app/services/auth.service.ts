@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { User } from '../models/user.model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -8,10 +9,10 @@ import { User } from '../models/user.model';
 export class AuthService {
   user: User | undefined;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   addUser(user: { username: string; password: string; }) {
-    return this.http.post('http://localhost:3000/users', user).subscribe();
+    return this.http.post<User>('http://localhost:3000/users', user);
   }
 
   login(user: { username: string; password: string; }) {
@@ -21,6 +22,7 @@ export class AuthService {
   logout() {
     this.user = undefined;
     localStorage.removeItem('user');
+    this.router.navigate(['/explorer']);
   }
 
   saveUser() {
@@ -44,7 +46,7 @@ export class AuthService {
     return false;
   }
 
-  private getSavedUserInfo() {
+  getSavedUserInfo() {
     return this.http.get<User[]>('http://localhost:3000/users?id=' + this.getSavedUser());
   }
 }

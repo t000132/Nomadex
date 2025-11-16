@@ -1,131 +1,299 @@
 .explorer-container {
+  background-color: #fafafa;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+// Hero Section
+.hero-section {
   text-align: center;
-}
+  padding: 6rem 4rem;
+  background-color: #fff;
+  width: 100%;
 
-.hero {
-  padding: 3rem 0;
-  margin-bottom: 3rem;
-  
-  h1 {
-    font-size: 3rem;
-    color: #2c3e50;
-    margin-bottom: 1rem;
+  .hero-content {
+    max-width: 900px;
+    margin: 0 auto;
+
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: #000;
+      margin-bottom: 1.5rem;
+      letter-spacing: -1px;
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      font-size: 1.4rem;
+      color: #555;
+      margin-bottom: 3rem;
+      line-height: 1.6;
+    }
+
+    .hero-image {
+      margin-top: 3rem;
+      
+      img {
+        width: 100%;
+        max-width: 1000px;
+        height: auto;
+        border-radius: 16px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        &:hover {
+          transform: scale(1.02);
+          box-shadow: 0 16px 50px rgba(0, 0, 0, 0.25);
+        }
+      }
+    }
   }
-  
-  .tagline {
-    font-size: 1.5rem;
-    color: #7f8c8d;
-    font-style: italic;
+
+  .hero-actions {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }
 
-.features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-bottom: 4rem;
+// Feature Sections
+.feature-section {
+  padding: 5rem 4rem;
+  background-color: #fafafa;
+  width: 100%;
+
+  &:nth-child(even) {
+    background-color: #fff;
+  }
+
+  .feature-container {
+    max-width: 100%;
+    padding: 0;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+
+  .feature-text {
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #000;
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+
+    p {
+      font-size: 1.15rem;
+      line-height: 1.8;
+      color: #555;
+    }
+  }
+
+  .feature-image {
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        transform: scale(1.02);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+
+  &.reverse {
+    .feature-container {
+      .feature-text {
+        order: 2;
+      }
+      .feature-image {
+        order: 1;
+      }
+    }
+  }
 }
 
-.feature-card {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  
+// Voyages Section
+.voyages-section {
+  padding: 5rem 4rem;
+  background-color: #fff;
+  width: 100%;
+
+  .section-header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 4rem;
+
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #000;
+      margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+      font-size: 1.15rem;
+      color: #555;
+      line-height: 1.6;
+    }
+  }
+
+  .voyages-grid {
+    max-width: 100%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+}
+
+// Buttons
+.btn {
+  padding: 1rem 3rem;
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background: #333;
+    border-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
   }
-  
-  .icon {
-    font-size: 3rem;
-    display: block;
+
+  &-primary,
+  &-secondary {
+    background: #000;
+    color: #fff;
+    border: 2px solid #000;
+
+    &:hover {
+      background: #333;
+      border-color: #333;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    }
+  }
+}
+
+// States
+.loading,
+.error-message,
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  margin: 2rem auto;
+  max-width: 600px;
+}
+
+.loading {
+  color: #555;
+  font-size: 1.1rem;
+}
+
+.error-message {
+  color: #d32f2f;
+  background: #ffebee;
+  border-radius: 12px;
+  padding: 2rem;
+  border: 2px solid #d32f2f;
+}
+
+.empty-state {
+  .empty-icon {
+    font-size: 4rem;
     margin-bottom: 1rem;
   }
-  
+
   h3 {
-    color: #2c3e50;
+    font-size: 1.5rem;
+    color: #000;
     margin-bottom: 0.5rem;
   }
-  
+
   p {
-    color: #7f8c8d;
-    line-height: 1.6;
+    color: #555;
+    font-size: 1.1rem;
   }
 }
 
-.cta-section {
-  padding: 3rem 0;
-  margin-bottom: 2rem;
-  
-  h2 {
-    color: #2c3e50;
-    margin-bottom: 2rem;
-    font-size: 2rem;
-  }
-}
-
-.cta-buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.btn {
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  display: inline-block;
-  
-  &.btn-primary {
-    background-color: #27ae60;
-    color: white;
-    
-    &:hover {
-      background-color: #229954;
-      transform: scale(1.05);
-    }
-  }
-  
-  &.btn-secondary {
-    background-color: #3498db;
-    color: white;
-    
-    &:hover {
-      background-color: #2980b9;
-      transform: scale(1.05);
-    }
-  }
-}
-
-.info-box {
-  background-color: #e8f5e9;
-  border-left: 4px solid #27ae60;
-  padding: 1rem;
-  border-radius: 4px;
-  max-width: 600px;
-  margin: 2rem auto;
-  
-  p {
-    margin: 0;
-    color: #2c3e50;
+// Responsive
+@media (max-width: 1024px) {
+  .feature-section .feature-container {
+    gap: 3rem;
   }
 }
 
 @media (max-width: 768px) {
-  .hero h1 {
-    font-size: 2rem;
+  .hero-section {
+    padding: 4rem 1.5rem;
+
+    .hero-content h1 {
+      font-size: 2.5rem;
+    }
+
+    .hero-content .hero-subtitle {
+      font-size: 1.2rem;
+    }
   }
-  
-  .hero .tagline {
-    font-size: 1.2rem;
+
+  .feature-section {
+    padding: 3rem 1.5rem;
+
+    .feature-container {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .feature-text h2 {
+      font-size: 2rem;
+    }
+
+    &.reverse .feature-container {
+      .feature-text {
+        order: 1;
+      }
+      .feature-image {
+        order: 2;
+      }
+    }
   }
-  
-  .features {
-    grid-template-columns: 1fr;
+
+  .voyages-section {
+    padding: 3rem 1.5rem;
+
+    .section-header h2 {
+      font-size: 2rem;
+    }
+
+    .voyages-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+
+    .btn {
+      width: 100%;
+    }
   }
 }

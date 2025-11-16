@@ -1,23 +1,49 @@
 <nav class="navbar">
   <div class="navbar-container">
-    <a routerLink="/" class="navbar-brand">
-      <span class="logo">🌍</span>
+    <a [routerLink]="isUserConnected ? '/dashboard' : '/'" class="navbar-brand">
+      <img src="logo.png" alt="Nomadex Logo" class="logo-img" />
       <span class="brand-name">Nomadex</span>
     </a>
-    
+
     <ul class="navbar-menu">
-      <li>
-        <a routerLink="/explorer" routerLinkActive="active">Explorer</a>
-      </li>
-      <li>
-        <a routerLink="/voyages" routerLinkActive="active">Mes Voyages</a>
-      </li>
-      <li>
-        <a routerLink="/ajouter-voyage" routerLinkActive="active" class="btn-primary">+ Ajouter</a>
-      </li>
-      <li>
-        <a routerLink="/login" routerLinkActive="active" class="btn-secondary">Connexion</a>
-      </li>
+      @if (isUserConnected) {
+        <li>
+          <a routerLink="/voyages" routerLinkActive="active">Voyages</a>
+        </li>
+        <li>
+          <a routerLink="/ajouter-voyage" routerLinkActive="active" class="btn-primary">+ Ajouter</a>
+        </li>
+      } @else {
+        <li>
+          <a routerLink="/login" routerLinkActive="active" class="btn-secondary">Connexion</a>
+        </li>
+        <li>
+          <a routerLink="/register" routerLinkActive="active" class="btn-primary">Inscription</a>
+        </li>
+      }
+
+      @if (isUserConnected) {
+        <li class="user-menu">
+          <button type="button" class="user-menu-button" (click)="toggleUserMenu()">
+            <span>👤 {{ getUsername }}</span>
+            <span class="arrow">▾</span>
+          </button>
+          @if (showUserMenu) {
+            <div class="user-dropdown">
+              <li>
+                <button type="button" class="dropdown-item" (click)="navigateToProfile()">
+                  <span>👤</span>
+                  <span>Profil</span>
+                </button>
+              </li>
+              <button type="button" class="dropdown-item" (click)="logout()">
+                <span>🚪</span>
+                <span>Déconnexion</span>
+              </button>
+            </div>
+          }
+        </li>
+      }
     </ul>
   </div>
 </nav>

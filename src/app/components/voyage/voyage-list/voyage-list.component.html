@@ -1,1 +1,106 @@
-<p>voyage-list fonctionne!</p>
+<section class="voyage-list container">
+  <div class="voyage-list__intro">
+    <div>
+      <h1 class="voyage-list__title">Voyages</h1>
+      <p class="voyage-list__subtitle">
+        Découvrez les aventures partagées par la communauté et explorez de nouvelles destinations.
+      </p>
+    </div>
+  </div>
+
+  <div class="voyage-list__controls">
+    <div class="voyage-list__search">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.71.71l.27.28v.79l5 4.99L20.49 19zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9"
+        />
+      </svg>
+      <input
+        type="search"
+        placeholder="Rechercher un voyage, une destination…"
+        [value]="searchTerm"
+        (input)="onSearch($any($event.target).value)"
+        [disabled]="isLoading"
+      />
+    </div>
+
+    <label class="voyage-list__sort">
+      <span>Tri</span>
+      <select [ngModel]="sortOption" (ngModelChange)="setSort($event)" [disabled]="isLoading">
+        <option value="recent">Plus récents</option>
+        <option value="oldest">Plus anciens</option>
+        <option value="az">A → Z</option>
+        <option value="za">Z → A</option>
+      </select>
+    </label>
+  </div>
+
+  <div *ngIf="error" class="voyage-list__alert voyage-list__alert--error">
+    {{ error }}
+  </div>
+
+  <div
+    *ngIf="toastMessage"
+    class="voyage-list__toast"
+    [class.voyage-list__toast--error]="toastVariant === 'error'"
+  >
+    {{ toastMessage }}
+  </div>
+
+  <div *ngIf="isLoading" class="voyage-list__loading">
+    Chargement des voyages…
+  </div>
+
+  <div class="voyage-list__grid" *ngIf="!isLoading && filteredVoyages.length; else emptyOrLoading">
+    <app-voyage-card
+      *ngFor="let voyage of filteredVoyages; trackBy: trackByVoyageId"
+      [voyage]="voyage"
+      [disableActions]="true"
+      (viewDetail)="viewVoyage($event)"
+    ></app-voyage-card>
+  </div>
+
+  <ng-template #emptyOrLoading>
+    <ng-container *ngIf="!isLoading">
+    <div class="voyage-list__empty">
+      <div class="voyage-list__empty-content">
+        <h3>Pas encore de voyage ici</h3>
+        <p>
+          Commencez par ajouter votre prochaine destination. Vous pourrez ensuite partager vos récits et souvenirs.
+        </p>
+        <button
+          type="button"
+          class="voyage-list__cta"
+          (click)="openCreateForm()"
+          [disabled]="isSaving"
+        >
+          <span aria-hidden="true">+</span>
+          Créer mon premier voyage
+        </button>
+      </div>
+    </div>
+    </ng-container>
+  </ng-template>
+
+  <div class="voyage-list__form-overlay" *ngIf="showForm">
+    <div class="voyage-list__form-container">
+      <button type="button" class="voyage-list__form-close" (click)="closeForm()" aria-label="Fermer le formulaire">
+        ×
+      </button>
+      <app-voyage-form
+        [initialValue]="editingVoyage"
+        [submitting]="isSaving"
+        (cancel)="closeForm()"
+        (submitForm)="handleFormSubmit($event)"
+      ></app-voyage-form>
+    </div>
+  </div>
+
+  <app-voyage-detail
+    *ngIf="selectedVoyage"
+    [voyage]="selectedVoyage"
+    (close)="closeDetail()"
+    (edit)="editVoyage($event)"
+  ></app-voyage-detail>
+</section>

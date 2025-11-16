@@ -1,1 +1,191 @@
-<p>voyage-form fonctionne!</p>
+<form class="voyage-form" [formGroup]="voyageForm" (ngSubmit)="onSubmit()">
+  <header class="voyage-form__header">
+    <div>
+      <h2>{{ initialValue ? 'Modifier le voyage' : 'Créer un nouveau voyage' }}</h2>
+      <p>Décrivez votre prochaine aventure, choisissez l’endroit et ajoutez vos visuels.</p>
+    </div>
+  </header>
+
+  <section class="voyage-form__section">
+    <div
+      class="voyage-form__field"
+      [class.voyage-form__field--error]="voyageForm.get('titre')?.invalid && voyageForm.get('titre')?.touched"
+    >
+      <label for="titre">Titre du post</label>
+      <input id="titre" type="text" formControlName="titre" placeholder="Exploration de Kyoto au printemps" />
+      <small *ngIf="voyageForm.get('titre')?.hasError('required')">Ce champ est requis.</small>
+      <small *ngIf="voyageForm.get('titre')?.hasError('maxlength')">
+        Maximum {{ voyageForm.get('titre')?.getError('maxlength')?.requiredLength }} caractères.
+      </small>
+    </div>
+
+    <div
+      class="voyage-form__field"
+      [class.voyage-form__field--full]="true"
+      [class.voyage-form__field--error]="voyageForm.get('description')?.invalid && voyageForm.get('description')?.touched"
+    >
+      <label for="description">Description</label>
+      <textarea
+        id="description"
+        rows="6"
+        formControlName="description"
+        placeholder="Racontez l’essentiel du voyage, vos objectifs et les moments forts que vous anticipez…"
+      ></textarea>
+      <small *ngIf="voyageForm.get('description')?.hasError('required')">Ce champ est requis.</small>
+    </div>
+  </section>
+
+  <section class="voyage-form__section">
+    <div class="voyage-form__location">
+      <div class="voyage-form__field" [class.voyage-form__field--full]="true">
+        <label for="locationSearch">Localisation</label>
+        <div class="voyage-form__search">
+          <input
+            id="locationSearch"
+            type="search"
+            formControlName="locationSearch"
+            placeholder="Rechercher une ville, un pays…"
+            (focus)="focusLocation()"
+            (blur)="blurLocation()"
+            autocomplete="off"
+          />
+          <button
+            type="button"
+            class="voyage-form__search-clear"
+            *ngIf="voyageForm.get('locationSearch')?.value"
+            (click)="clearLocation()"
+          >
+            ✕
+          </button>
+
+          <ng-container *ngIf="locationIsFocused">
+            <ng-container *ngIf="locationResults$ | async as results">
+              <ul class="voyage-form__suggestions">
+                <li
+                  *ngFor="let location of results; let idx = index"
+                  (mousedown)="selectLocation(location)"
+                  [class.is-highlighted]="idx === 0"
+                >
+                  <span class="voyage-form__suggestion-city">{{ location.city }}</span>
+                  <span class="voyage-form__suggestion-country">{{ location.country }}</span>
+                </li>
+                <li class="voyage-form__suggestion-empty" *ngIf="results.length === 0">
+                  Aucun résultat. Essayez un autre terme.
+                </li>
+              </ul>
+            </ng-container>
+          </ng-container>
+        </div>
+
+        <small
+          class="voyage-form__location-error"
+          *ngIf="
+            voyageForm.get('destination')?.invalid &&
+            (voyageForm.get('destination')?.touched || voyageForm.get('locationSearch')?.touched)
+          "
+        >
+          Sélectionnez une localisation dans la liste pour continuer.
+        </small>
+      </div>
+
+      <div class="voyage-form__map">
+        <div class="voyage-form__map-header">
+          <h3>Carte interactive</h3>
+          <span *ngIf="hasCoordinates" class="voyage-form__map-coords">
+            {{ voyageForm.value.latitude | number: '1.2-4' }}, {{ voyageForm.value.longitude | number: '1.2-4' }}
+          </span>
+        </div>
+        <div class="voyage-form__map-wrapper" [class.voyage-form__map-wrapper--empty]="!hasCoordinates">
+          <div #mapContainer class="voyage-form__map-canvas"></div>
+          <div class="voyage-form__map-overlay" *ngIf="!hasCoordinates">
+            <p>{{ mapHint }}</p>
+          </div>
+          <div class="voyage-form__map-caption" *ngIf="hasCoordinates">
+            {{ voyageForm.value.destination }}, {{ voyageForm.value.pays }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="voyage-form__section voyage-form__dates">
+    <div
+      class="voyage-form__field"
+      [class.voyage-form__field--error]="voyageForm.get('dateDebut')?.invalid && voyageForm.get('dateDebut')?.touched"
+    >
+      <label for="dateDebut">Départ</label>
+      <input id="dateDebut" type="date" formControlName="dateDebut" />
+      <small *ngIf="voyageForm.get('dateDebut')?.hasError('required')">Ce champ est requis.</small>
+    </div>
+
+    <div
+      class="voyage-form__field"
+      [class.voyage-form__field--error]="voyageForm.get('dateFin')?.invalid && voyageForm.get('dateFin')?.touched"
+    >
+      <label for="dateFin">Retour</label>
+      <input id="dateFin" type="date" formControlName="dateFin" />
+      <small *ngIf="voyageForm.get('dateFin')?.hasError('required')">Ce champ est requis.</small>
+    </div>
+  </section>
+
+  <section class="voyage-form__section">
+    <div class="voyage-form__dropzone"
+      (drop)="onDropFile($event)"
+      (click)="triggerFileDialog($event)"
+    >
+      <input #fileInput type="file" accept="image/*" multiple (change)="onFileBrowse($event)" hidden />
+      <div class="voyage-form__dropzone-icon">📁</div>
+      <p class="voyage-form__dropzone-title">
+        Glissez-déposez une ou plusieurs images, ou cliquez pour parcourir vos fichiers
+      </p>
+      <p class="voyage-form__dropzone-hint">Formats supportés : JPG, PNG. Taille maximale recommandée : 5MB.</p>
+
+      <ng-container *ngIf="voyageForm.get('galleries')?.value as galleries">
+        <div class="voyage-form__gallery" *ngIf="galleries.length">
+          <ul class="voyage-form__gallery-list">
+            <li
+              *ngFor="let image of galleries; let idx = index"
+              class="voyage-form__gallery-item"
+              [class.is-cover]="idx === 0"
+            >
+              <img [src]="image" [alt]="'Photo ' + (idx + 1)" />
+              <div class="voyage-form__gallery-meta">
+                <span class="voyage-form__gallery-label">Photo {{ idx + 1 }}</span>
+                <span class="voyage-form__gallery-cover" *ngIf="idx === 0">Couverture</span>
+                <button type="button" (click)="clearImage(idx)">
+                  Retirer
+                </button>
+              </div>
+            </li>
+          </ul>
+          <small class="voyage-form__gallery-hint">
+            La première image est utilisée comme couverture.
+          </small>
+          <button type="button" class="voyage-form__gallery-clear" (click)="clearImage()">
+            Retirer toutes les images
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </section>
+
+  <section class="voyage-form__section voyage-form__options">
+    <label class="voyage-form__toggle">
+      <input type="checkbox" formControlName="isPublic" />
+      <span>Partager ce voyage avec la communauté Nomadex</span>
+    </label>
+    <span class="voyage-form__hint">
+      Activez cette option pour rendre votre voyage visible par tous les utilisateurs.
+    </span>
+  </section>
+
+  <footer class="voyage-form__actions">
+    <button type="button" class="voyage-form__btn" (click)="onCancel()" [disabled]="submitting">
+      Annuler
+    </button>
+    <button type="submit" class="voyage-form__btn voyage-form__btn--primary" [disabled]="submitting">
+      <span *ngIf="submitting; else submitLabel">Enregistrement…</span>
+      <ng-template #submitLabel>{{ initialValue ? 'Mettre à jour' : 'Créer le post' }}</ng-template>
+    </button>
+  </footer>
+</form>

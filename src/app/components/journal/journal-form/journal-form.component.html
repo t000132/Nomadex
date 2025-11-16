@@ -1,1 +1,126 @@
-<p>journal-form fonctionne!</p>
+<form [formGroup]="journalForm" (ngSubmit)="onSubmit()" class="journal-form">
+  <h2 class="journal-form__title">{{ initialValue ? 'Modifier' : 'Nouvelle' }} entrée de journal</h2>
+  
+  <div class="form-group">
+    <label for="titre">Titre *</label>
+    <input
+      type="text"
+      id="titre"
+      formControlName="titre"
+      placeholder="Ex: Une journée inoubliable"
+      [class.error]="journalForm.get('titre')?.invalid && journalForm.get('titre')?.touched"
+    />
+    <div class="error-message" *ngIf="journalForm.get('titre')?.hasError('required') && journalForm.get('titre')?.touched">
+      Le titre est requis
+    </div>
+    <div class="error-message" *ngIf="journalForm.get('titre')?.hasError('minlength') && journalForm.get('titre')?.touched">
+      Le titre doit contenir au moins 3 caractères
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="date">Date *</label>
+      <input
+        type="date"
+        id="date"
+        formControlName="date"
+        [class.error]="journalForm.get('date')?.invalid && journalForm.get('date')?.touched"
+      />
+      <div class="error-message" *ngIf="journalForm.get('date')?.invalid && journalForm.get('date')?.touched">
+        La date est requise
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="lieu">Lieu *</label>
+      <input
+        type="text"
+        id="lieu"
+        formControlName="lieu"
+        placeholder="Ex: Paris, France"
+        [class.error]="journalForm.get('lieu')?.invalid && journalForm.get('lieu')?.touched"
+      />
+      <div class="error-message" *ngIf="journalForm.get('lieu')?.invalid && journalForm.get('lieu')?.touched">
+        Le lieu est requis
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="contenu">Contenu *</label>
+    <textarea
+      id="contenu"
+      formControlName="contenu"
+      rows="6"
+      placeholder="Racontez votre journée..."
+      [class.error]="journalForm.get('contenu')?.invalid && journalForm.get('contenu')?.touched"
+    ></textarea>
+    <div class="error-message" *ngIf="journalForm.get('contenu')?.hasError('required') && journalForm.get('contenu')?.touched">
+      Le contenu est requis
+    </div>
+    <div class="error-message" *ngIf="journalForm.get('contenu')?.hasError('minlength') && journalForm.get('contenu')?.touched">
+      Le contenu doit contenir au moins 10 caractères
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="humeur">Humeur *</label>
+      <select
+        id="humeur"
+        formControlName="humeur"
+        [class.error]="journalForm.get('humeur')?.invalid && journalForm.get('humeur')?.touched"
+      >
+        <option value="">Sélectionnez...</option>
+        <option value="joyeux">😊 Joyeux</option>
+        <option value="excite">😃 Excité</option>
+        <option value="calme">😌 Calme</option>
+        <option value="fatigue">😴 Fatigué</option>
+        <option value="triste">😢 Triste</option>
+        <option value="neutre">😐 Neutre</option>
+      </select>
+      <div class="error-message" *ngIf="journalForm.get('humeur')?.invalid && journalForm.get('humeur')?.touched">
+        L'humeur est requise
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="meteo">Météo *</label>
+      <select
+        id="meteo"
+        formControlName="meteo"
+        [class.error]="journalForm.get('meteo')?.invalid && journalForm.get('meteo')?.touched"
+      >
+        <option value="">Sélectionnez...</option>
+        <option value="ensoleille">☀️ Ensoleillé</option>
+        <option value="nuageux">☁️ Nuageux</option>
+        <option value="pluvieux">🌧️ Pluvieux</option>
+        <option value="orageux">⛈️ Orageux</option>
+        <option value="neigeux">❄️ Neigeux</option>
+      </select>
+      <div class="error-message" *ngIf="journalForm.get('meteo')?.invalid && journalForm.get('meteo')?.touched">
+        La météo est requise
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="imageUrl">URL de l'image</label>
+    <input
+      type="url"
+      id="imageUrl"
+      formControlName="imageUrl"
+      placeholder="https://example.com/image.jpg"
+    />
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="btn btn-secondary" (click)="onCancel()">
+      Annuler
+    </button>
+    <button type="submit" class="btn btn-primary" [disabled]="journalForm.invalid">
+      {{ initialValue ? 'Mettre à jour' : 'Créer' }}
+    </button>
+  </div>
+</form>

@@ -30,11 +30,25 @@ export class RegisterComponent implements OnInit {
 
   addUser() {
     if (this.registerForm.invalid) return;
-    this.authService.addUser({
+    
+    const credentials = {
       username: this.registerForm.value.username,
       password: this.registerForm.value.password
+    };
+    
+    this.authService.addUser(credentials).subscribe({
+      next: (newUser) => {
+        // Connecter automatiquement l'utilisateur après inscription
+        this.authService.user = newUser;
+        this.authService.saveUser();
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        console.error('Erreur lors de l\'inscription:', err);
+        // En cas d'erreur, rediriger vers login
+        this.router.navigate(['/login']);
+      }
     });
-    this.router.navigate(['/login']);
   }
 
   private checkPasswords(control: FormGroup) {
